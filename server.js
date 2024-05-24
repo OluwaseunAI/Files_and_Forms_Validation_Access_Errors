@@ -90,7 +90,7 @@ const serverRequestHandler = (req, res) => {
 }
 const server = http.createServer(serverRequestHandler);
 
-server.listen("3000", "127.0.0.1", ()=>{
+server.listen("10000", "0.0.0.0", ()=>{
   console.log("Server running")
   console.log(`4-6`)
 
