@@ -1,5 +1,6 @@
 const http = require('node:http');
 const fs = require('fs');
+const path = require('path');
 
 if (!fs.existsSync("database.json")){
   fs.writeFile("database.json", "", ()=>{})
