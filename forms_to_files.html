@@ -6,34 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" href="form_styles.css" > -->
     <title>Form File Validation Access_errors</title>
-    <script src="server.js"></script>
 </head>
 <body>
     <form action="/submit" method="post" id="myForm">
         <label for="firstName">First Name:</label><br>
-        <input type="text" id="firstName" required><br><br>
+        <input type="text" id="firstName" name="firstName" required><br><br>
 
         <label for="lastName">Last Name:</label><br>
-        <input type="text" id="lastName" required><br><br>
+        <input type="text" id="lastName" name="lastName" required><br><br>
 
         <label for="otherNames">Other Names:</label><br>
-        <input type="text" id="otherNames"><br><br>
+        <input type="text" id="otherNames" name="otherNames"><br><br>
 
         <label for="Email">Email Address:</label><br>
-        <input type="Email" id="Email" required><br><br>
+        <input type="Email" id="Email" name="email" required><br><br>
 
         <label for="phone">Phone Number:</label><br>
-        <input type="tel" id="phone" pattern="[0-9]{11}" required><br><br>
+        <input type="tel" id="phone" pattern="[0-9]{11}" name="phone" required><br><br>
 
         <label for="gender">Gender:</label><br>
-        <select id="gender" name="gender" required>
+        <select name="gender" required>
             <option value="">Select</option>
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="other">Other</option>
         </select><br><br>
 
-        <button type="submit">Submit</button>
+        <input type="submit">Submit</input>
     </form>
 </body>
 </html>

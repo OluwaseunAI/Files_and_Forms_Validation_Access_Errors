@@ -1,6 +1,7 @@
 const http = require('node:http');
 const fs = require('fs');
 const path = require('path');
+const qs = require("querystring")
 
 if (!fs.existsSync("database.json")){
   fs.writeFile("database.json", "", ()=>{})
@@ -19,16 +20,16 @@ function validateForm(data){
     error.push("First name and last name can not be less than one character")
   }
 
-  if(!/^[a-zA-Z]+$/.test(firstName) || !/[^a-zA-Z]+$/.test(lastName)){
+  if(!(/^[A-Za-z]+$/.test(firstName)) || !(/^[A-Za-z]+$/.test(lastName))){
     error.push("First name and last name can not contain numbers.")
   }
 
-  if(!/\S+\@\S+\.S+/.test(email)){
+  if(!/^[a-zA-Z0-9.!#$]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){
     error.push('Email must contain "@". Invalid format.')
   }
 
-  if(phone.length < 10 || phone.length > 10){
-    error.push("Phone number must be 10 characteracters")
+  if(!(phone.length === 11)){
+    error.push("Phone number must be 11 characteracters")
   }
   if(!gender){
     error.push("Gender is required, cannot be blank.")
@@ -49,21 +50,23 @@ const serverRequestHandler = (req, res) => {
       });
  } else if (req.url === '/submit' && (req.method === 'POST' || req.method === 'GET')){
 
-    let body = [];
+    let body = "";
 
-    res.on('data', (chunk)=>{
-      body.push(chunk);
-    }).on('end', ()=>{
-          const parsed_body = Buffer.concat(body).toString();
-          const data = JSON.parse(parsed_body);
-          const error = validateForm(data)
+    req.on('data', (chunk)=>{
+      body += chunk;
+      // body += body.push(chunk);
+    })
+    req.on('end', ()=>{
+          // const parsed_body = qs.parse(Buffer.concat(body));
+          const parsed_body = qs.parse(body);
+          const errors = validateForm(parsed_body)
 
           if (errors.length > 0) {
             res.writeHead(400, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ errors }));
             return;
           }
-
+let validData;
           fs.readFile('database.json', 'utf8', (err, jsonString) => {
             if (err) {
               console.log("Reading file failed:", err);
@@ -71,8 +74,8 @@ const serverRequestHandler = (req, res) => {
               res.end(JSON.stringify({ error: "Internal Server Error" }));
               return;
             }
-            const validData = jsonString ? JSON.parse(jsonString) : [];
-            validData.push(data);
+          validData = jsonString ? JSON.parse(jsonString) : [];
+            validData.push(parsed_body);
             fs.writeFile('database.json', JSON.stringify(validData), (err) => {
               if (err) {
                 console.log("Cannot write to file", err);
